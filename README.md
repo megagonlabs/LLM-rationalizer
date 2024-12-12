@@ -10,3 +10,7 @@ Note that the knowledge graph extraction pipeline utilizes the [QAGNN](https://g
 # Study Interface Design
 
 Coming soon.
+
+## Crowd study interface
+
+## Expert study interface
