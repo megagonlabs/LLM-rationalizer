@@ -1,0 +1,55 @@
+{% extends "components/base.html" %}
+
+{% block header %}
+Welcome
+{% endblock %}
+
+{% block content %}
+<p>
+    Thank you for participating in this HIT!
+</p>
+<p>
+    The central task in this HIT is to answer a series of multiple choice question about daily life. 
+</p>
+
+<p>The HIT consists of TWO phases: a quiz consisting of 20 tasks and a follow-up survey. 
+    The quiz amd survey phases should take approximately <strong>40 minutes</strong> and <strong>3 minutes</strong>, respectively.</p>
+
+
+<!--<p>The HIT consists of 3 phases: a qualifying exam, a collection tasks, and a survey.</p>
+
+<p>
+    The tasks in the qualification exam is similar to the actual tasks in the HIT. 
+    There are three (3) tasks in the qualification exam.
+    Completing the qualification exam should take approximately <strong>5-6 minutes</strong> and 
+    will earn you <span class='success-text'>$2.00</span> for successful completion ($0.50 for participation and $0.50 for correct response to each task.) 
+    <span class='warning-text'>However, failure to complete all tasks successfully will earn you only $0.50 and 
+    you will be ineligible to participate in the next two phases.</span>
+</p>-->
+
+<p>Completing the two phases will earn you at least <span class='success-text'>$10.50</span> reward (subject to approval.) 
+    <span class='warning-text'>Note that your submission will be rigorously scrutized, 
+    specially if any suspiciour behavior is observed (for example, abnormally fast completion times.)</span>  
+    You will have the opportunity to earn bonuses of up to $1.50 in this HIT. 
+</p>
+
+{% endblock %}
+
+{% block next_button %}
+<!-- <button type="button" class="btn btn-primary">Start HIT</button> -->
+<!-- <a class="btn btn-primary" href="{{ url_for('presurvey_page') }}" role="button">Start HIT</a> -->
+{% if entered %}
+<button class="btn btn-primary" type="submit" id="next_btn" value="submit" disabled>Start HIT</button>
+<p class='warning-text'>You have already taken this HIT!</p>
+{% else %}
+<button class="btn btn-primary" type="submit" id="next_btn" value="submit">Start HIT</button>
+{% endif %}
+{% endblock %}
+
+
+{% block script %}
+<script>
+    var element = document.getElementById("li_Welcome");
+    element.classList.add("list-group-item-success");
+</script>
+{% endblock %}

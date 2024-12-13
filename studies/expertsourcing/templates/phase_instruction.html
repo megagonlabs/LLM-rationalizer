@@ -1,0 +1,46 @@
+{% extends "components/base.html" %}
+
+{% block header %}
+Phase {{phase_id}} - Instruction
+{% endblock %}
+
+
+{% block content %}
+<p>In this Phase:</p>
+<ul>
+    {% if treatment_id == 1 %}
+    <li>For each task, you need to give an annotation. We will calculate your bonus based on your final annotation
+        accuracy. If your accuracy is above <span class='success-text'>75%</span>, you will receive <span class='success-text'>$0.07</span> for each correct annotation.
+    </li>
+    {% elif treatment_id == 2 %}
+    <li>For each task, you will be given the AI’s prediction to help you with the annotation. The label from AI might be
+        incorrect, so you need to <b>carefully assess whether the AI is correct</b> and give a final annotation. We will
+        calculate your bonus based on your final annotation accuracy. If your accuracy is above <span class='success-text'>75%</span>, you will receive <span class='success-text'>$0.07</span> for each correct
+        annotation.
+    </li>
+    {% elif treatment_id == 3 %}
+    <li>For each task, you will be given the AI’s prediction <b>and the AI explanation</b> of why it gives the
+        prediction, to help you with the annotation. The label from AI might be incorrect, so you need to <b>carefully
+            read the AI explanation, and assess whether the AI is correct</b>. Then you need to give a final annotation,
+        and rate whether the AI explanation is helpful to assess the correctness of AI prediction. We will calculate
+        your bonus based on your final annotation accuracy. If your accuracy is above <span class='success-text'>75%</span>,
+        you will receive <span class='success-text'>$0.07</span> for each correct annotation.
+    </li>
+    {% endif %}
+    <li>There are attention check questions throughout the HIT. You may lose your bonus payment if you answer the
+        attention check question(s) incorrectly.</li>
+</ul>
+{% endblock %}
+
+{% block next_button %}
+<button class="btn btn-primary" type="submit" id="next_btn" value="submit">Next Page</button>
+<!-- <a class="btn btn-primary" href="{{ url_for('task_page', id=1) }}" role="button">Next Page</a> -->
+<!-- <a class="btn btn-primary" href="{{ url_for('task_page', id=21) }}" role="button">Next Page</a> -->
+{% endblock %}
+
+{% block script %}
+<script>
+    var element = document.getElementById("li_Phase_1");
+    element.classList.add("list-group-item-success");
+</script>
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends "components/base.html" %}
+
+{% block header %}
+Drag and Drop Example
+{% endblock %}
+
+{% block content %}
+<p>
+  <br> <br>
+  <b>How relevant do you think each feature is for determining a loan applicant’s likelihood of defaulting on a loan?
+    Please rank the relevance of all features from <span style="color: red">most relevant</span> to <span
+      style="color: blue">least relevant</span>. You can rank the features by dragging their names and drop them to
+    appropriate positions in the sorted list (from most relevant to least relevant) at the bottom of this page.</b>
+</p>
+<br>
+
+<div id="feature_list" style="border-style: ridge; height: 100px; width: 30%;">
+  <ul style="list-style-type: none">
+    <li class="dragable-object" style="border-style: solid; width: 200px; ">Loan Amount</li>
+    <li class="dragable-object" style="border-style: solid; width: 200px; ">Interest Rate</li>
+    <li class="dragable-object" style="border-style: solid; width: 200px; ">Term</li>
+  </ul>
+</div>
+<div style="padding-top: 40px; display: table; table-layout: fixed; ">
+  <div class="position" id="position0"
+    style="border-style: solid; border-color: red; height: 30px; width: 200px; display: table-cell"></div>
+  <div style="height: 20px; width: 30px; display: table-cell; text-align: center"> > </div>
+  <div class="position" id="position1" style="border-style: solid; height: 30px; width: 200px; display: table-cell">
+  </div>
+  <div style="height: 20px; width: 30px; display: table-cell; text-align: center"> > </div>
+  <div class="position" id="position2" style="border-style: solid; height: 30px; width: 200px; display: table-cell; ">
+  </div>
+  <div style="height: 20px; width: 30px; display: table-cell; text-align: center"></div>
+</div>
+
+<p id="rank_res"></p>
+<input type="hidden" name="returnvalue" value="">
+{% endblock %}
+
+{% block next_button %}
+<button class="btn btn-primary" type="submit" id="submit_btn" value="submit">Submit HIT</button>
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+<script>
+  $('#feature_list li').draggable({
+    cursor: "move",
+    helper: "clone",
+    revert: "invalid",
+    containment: "document"
+  });
+  // $(".dragable-object").draggable({
+  //     revert: "invalid",
+  //     containment: "table"
+  // });
+  $("#feature_list").droppable({
+    accept: ".position li",
+    activeClass: "custom-state-active",
+    drop: function (e, ui) {
+      ui.draggable.attr("style", "border-style: solid; width: 200px; ");
+      $('#feature_list ul').append(ui.draggable);
+      // $('#feature_list ul').append('<li class="dragable-object" style="border-style: solid; width: 200px; ">' + ui.draggable.text() + '</li>');
+    }
+  });
+  $(".position").droppable({
+    accept: "#feature_list li, .position li",
+    // accept: ".dragable-object",
+    activeClass: "custom-state-active",
+    // tolerance: "touch",
+    // classes: {
+    //     "ui-droppable-hover": "highlight"
+    // },
+    drop: function (e, ui) {
+      if ($(this).find('li').length) {
+        // console.log('item exists!');
+        // console.log("$(this).find('li')[0]", $(this).find('li').get(0).innerText);
+        // console.log("ui.draggable.innerText", ui.draggable.text());
+        // console.log($(this).find('li').get(0).innerText != ui.draggable.text());
+        if ($(this).find('li').get(0).innerText != ui.draggable.text()) {
+          $('#feature_list ul').append('<li class="dragable-object" style="border-style: solid; width: 200px; ">' + $(this).find('li').get(0).innerText + '</li>');
+          $('#feature_list li').draggable({
+            cursor: "move",
+            helper: "clone",
+            revert: "invalid",
+            containment: "document"
+
+          });
+          $(this).find('li').remove();
+          // $('#feature_list li').draggable({
+          //     cursor: "move",
+          //     helper: "clone",
+          //     revert: "invalid",
+          //     containment: "document"
+          // });
+        }
+      }
+      ui.draggable.attr("style", "list-style-type: none");
+      ui.draggable.detach();
+      $(this).append(ui.draggable);
+      // $(this).find(".dragable-object").draggable("destroy");
+    }
+  });
+
+  // when click the button
+  $("#submit_btn").click(function () {
+    var feature_rank = [];
+    for (var i = 0; i < 3; i++) {
+      if (typeof $("#position" + i.toString()).find('li').get(0) === "undefined") {
+        all_ranked = false;
+      }
+      else {
+        feature_rank[i] = $("#position" + i.toString()).find('li').get(0).innerText;
+      }
+    }
+    // document.getElementById("rank_res").innerHTML = feature_rank;
+    $('input[name="returnvalue"]').val(feature_rank);
+  });
+</script>
+{% endblock %}
+
+<!-- 
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Drag and Drop Example</title>
+  <style>
+    .draggable {
+      width: 50px;
+      height: 50px;
+      background-color: lightblue;
+      text-align: center;
+      line-height: 50px;
+      margin: 5px;
+      cursor: move;
+    }
+
+    .blank {
+      width: 60px;
+      height: 60px;
+      background-color: lightgray;
+      text-align: center;
+      line-height: 60px;
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  
+
+
+  
+ 
+
+
+</body>
+
+</html> -->

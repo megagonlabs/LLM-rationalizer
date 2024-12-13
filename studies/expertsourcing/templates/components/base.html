@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    {% block head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <title>{% block title %}LAPRAS human study{% endblock %}</title>
+    {% endblock %}
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class='nav'>
+            {% include 'components/nav.html' %}
+        </div>
+
+        <div class='header'>
+            <h1>{% block header %}{% endblock %}</h1>
+            <hr>
+        </div>
+
+        {% if new_tab == True %}
+        <form method="post" target="_blank">
+        {% else %}
+        <form method="post">
+        {% endif %}
+            <!-- <p>worker_id: {{worker_id}}</p> -->
+            <!-- <input type="hidden" name="worker_id" value="{{worker_id}}"> -->
+            <div class='content'>
+                {% block content %} {% endblock %}
+            </div>
+
+            <div class='next_button'>
+                {% block next_button %} {% endblock %}
+            </div>
+        </form>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+        {% block script %}
+        {% endblock %}
+    </div>
+</body>
+
+</html>

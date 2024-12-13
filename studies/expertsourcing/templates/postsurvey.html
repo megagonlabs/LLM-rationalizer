@@ -1,0 +1,402 @@
+{% extends "components/base.html" %}
+
+{% block header %}
+Final Survey
+{% endblock %}
+
+{% block content %}
+<p>Thanks! You have completed all the 20 tasks!</p>
+<p>Before you submit this HIT, we’d like to ask you a few questions to learn about your annotation experience in Phase
+    1-3. Your answers to these questions are an essential component of our study, so please answer them to the best of
+    your capability.</p>
+<p>There are attention check questions throughout the HIT. You may lose your bonus payment if you answer the attention
+    check question(s) incorrectly.</p>
+<p>Please express to what extent you agree with the following statements based on your annotation experience in Phase 1,
+    Phase 2, and Phase 3.</p>
+
+<p>For your reference, below is a toy example interface in Phase 1, Phase 2, and Phase 3.</p>
+
+{% set n = 5 %}
+{% set left = 'Strongly disagree' %}
+{% set right = 'Strongly agree' %}
+
+<div class="mx-0 mx-sm-auto">
+    {% for question in questions %}
+        <div>
+            <p>
+                <strong>{{ loop.index }}. {{question.text}}</strong>
+            </p>
+            {% with name = question.id %}
+            {% include 'components/rating.html' %}
+            {% endwith %}
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block next_button %}
+<button class="btn btn-primary" type="submit" id="next_btn" value="submit">Next Page</button>
+{% endblock %}
+
+
+{% block script %}
+<script>
+   var element = document.getElementById("li_Final_Survey");
+   element.classList.add("list-group-item-success");
+    // proceed only when all questions are answered
+    $("#next_btn").click(function () {
+        let all_answered = true;
+        if (($("input[name='q1']:checked").val() == null) || 
+            ($("input[name='q2']:checked").val() == null) || 
+            ($("input[name='q3']:checked").val() == null) || 
+            ($("input[name='q4']:checked").val() == null) || 
+            ($("input[name='q5']:checked").val() == null) || 
+            ($("input[name='q6']:checked").val() == null) || 
+            ($("input[name='q7']:checked").val() == null)
+        ) {
+            alert("Please answer all question(s).");
+            return false;
+        }
+        // for (let i = 1; i <= 7; i++) {
+        //     console.log($("input[name=q'"+i.toString()+"']:checked").val());
+        //     if ($("input[name=q'" + i.toString() + "']:checked").val() == null) {
+        //         all_answered = false;
+        //         alert("Please answer all question(s).");
+        //         return false;
+                
+        //     }
+        // }
+    });
+
+</script>
+{% endblock %}
+
+
+<!-- <div class="mx-0 mx-sm-auto">
+    <div>
+        <p>
+            <strong>3. If you were to undertake more annotation tasks, I will use the Al model in this Phase as
+                annotation assistance again.</strong>
+        </p>
+    </div>
+
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th scope="row">Phase 2</th>
+                <td>
+                    <div class="mb-3">
+                        <div class="d-inline mx-3">
+                            Strongly disagree
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_1" value="1" />
+                            <label class="form-check-label" for="q3_1">1</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_2" value="2" />
+                            <label class="form-check-label" for="q3_2">2</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_3" value="3" />
+                            <label class="form-check-label" for="q3_3">3</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_4" value="4" />
+                            <label class="form-check-label" for="q3_4">4</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_5" value="5" />
+                            <label class="form-check-label" for="q3_5">5</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_6" value="6" />
+                            <label class="form-check-label" for="q3_6">6</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_7" value="7" />
+                            <label class="form-check-label" for="q3_7">7</label>
+                        </div>
+                        <div class="d-inline me-4">
+                            Strongly agree
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Phase 3</th>
+                <td>
+                    <div class="mb-3">
+                        <div class="d-inline mx-3">
+                            Strongly disagree
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_1" value="1" />
+                            <label class="form-check-label" for="q3_1">1</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_2" value="2" />
+                            <label class="form-check-label" for="q3_2">2</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_3" value="3" />
+                            <label class="form-check-label" for="q3_3">3</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_4" value="4" />
+                            <label class="form-check-label" for="q3_4">4</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_5" value="5" />
+                            <label class="form-check-label" for="q3_5">5</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_6" value="6" />
+                            <label class="form-check-label" for="q3_6">6</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_7" value="7" />
+                            <label class="form-check-label" for="q3_7">7</label>
+                        </div>
+                        <div class="d-inline me-4">
+                            Strongly agree
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="mx-0 mx-sm-auto">
+    <div>
+        <p>
+            <strong>4. I think the Al model's assistance in this Phase is helpful/useful for me to make correct annotations.</strong>
+        </p>
+    </div>
+
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th scope="row">Phase 2</th>
+                <td>
+                    <div class="mb-3">
+                        <div class="d-inline mx-3">
+                            Strongly disagree
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_1" value="1" />
+                            <label class="form-check-label" for="q3_1">1</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_2" value="2" />
+                            <label class="form-check-label" for="q3_2">2</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_3" value="3" />
+                            <label class="form-check-label" for="q3_3">3</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_4" value="4" />
+                            <label class="form-check-label" for="q3_4">4</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_5" value="5" />
+                            <label class="form-check-label" for="q3_5">5</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_6" value="6" />
+                            <label class="form-check-label" for="q3_6">6</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_7" value="7" />
+                            <label class="form-check-label" for="q3_7">7</label>
+                        </div>
+                        <div class="d-inline me-4">
+                            Strongly agree
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Phase 3</th>
+                <td>
+                    <div class="mb-3">
+                        <div class="d-inline mx-3">
+                            Strongly disagree
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_1" value="1" />
+                            <label class="form-check-label" for="q3_1">1</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_2" value="2" />
+                            <label class="form-check-label" for="q3_2">2</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_3" value="3" />
+                            <label class="form-check-label" for="q3_3">3</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_4" value="4" />
+                            <label class="form-check-label" for="q3_4">4</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_5" value="5" />
+                            <label class="form-check-label" for="q3_5">5</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_6" value="6" />
+                            <label class="form-check-label" for="q3_6">6</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_7" value="7" />
+                            <label class="form-check-label" for="q3_7">7</label>
+                        </div>
+                        <div class="d-inline me-4">
+                            Strongly agree
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="mx-0 mx-sm-auto">
+    <div>
+        <p>
+            <strong>6. I feel that the predictions made by the AI model in this Phase are accurate.</strong>
+        </p>
+    </div>
+
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th scope="row">Phase 2</th>
+                <td>
+                    <div class="mb-3">
+                        <div class="d-inline mx-3">
+                            Strongly disagree
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_1" value="1" />
+                            <label class="form-check-label" for="q3_1">1</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_2" value="2" />
+                            <label class="form-check-label" for="q3_2">2</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_3" value="3" />
+                            <label class="form-check-label" for="q3_3">3</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_4" value="4" />
+                            <label class="form-check-label" for="q3_4">4</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_5" value="5" />
+                            <label class="form-check-label" for="q3_5">5</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_6" value="6" />
+                            <label class="form-check-label" for="q3_6">6</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_7" value="7" />
+                            <label class="form-check-label" for="q3_7">7</label>
+                        </div>
+                        <div class="d-inline me-4">
+                            Strongly agree
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Phase 3</th>
+                <td>
+                    <div class="mb-3">
+                        <div class="d-inline mx-3">
+                            Strongly disagree
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_1" value="1" />
+                            <label class="form-check-label" for="q3_1">1</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_2" value="2" />
+                            <label class="form-check-label" for="q3_2">2</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_3" value="3" />
+                            <label class="form-check-label" for="q3_3">3</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_4" value="4" />
+                            <label class="form-check-label" for="q3_4">4</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_5" value="5" />
+                            <label class="form-check-label" for="q3_5">5</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_6" value="6" />
+                            <label class="form-check-label" for="q3_6">6</label>
+                        </div>
+                
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="q3" id="q3_7" value="7" />
+                            <label class="form-check-label" for="q3_7">7</label>
+                        </div>
+                        <div class="d-inline me-4">
+                            Strongly agree
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div> -->

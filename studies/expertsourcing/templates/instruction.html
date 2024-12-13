@@ -1,0 +1,192 @@
+{% extends "components/base.html" %}
+
+{% block header %}
+Instruction
+{% endblock %}
+
+{% block content %}
+<p>In this HIT, you will need to answer a series of multiple choice question about daily life.</p>
+
+<h3>HIT Specification</h3>
+<hr>
+{% include 'components/anno_instruction_entailment.html' %}
+   
+<div id="q1_div">
+    <h3>Example Task</h3>
+    <hr>
+    {% with treatment = 1, premise = 'She had a knack for entertaining, everybody told he she had a what?', hypothesis = 'a) fun b) talent c) learn about d) intelligence e) recognize' %}
+    {% include 'components/input_entailment.html' %}
+    {% endwith %}
+    
+    
+    <div class="mx-0 mx-sm-auto" id="response_div">
+        <div>
+            <p>
+                <strong>Your answer: </strong>
+            </p>
+        </div>
+    
+        {% with name = 'q1', options = ['a) fun', 'b) talent', 'c) learn about', 'd) intelligence', 'e) recognize'] %}
+        {% include 'components/multichoice.html' %}
+        {% endwith %}
+        
+        <button type="button" class="btn btn-primary btn-sm" id="task1_btn">Submit answer</button>
+        <p id="task1_warning" class='warning-text' style="display:none">Please select an option before submitting your answer.</p>
+    </div>
+</div>
+
+<div class="mx-0 mx-sm-auto" id="ai_div" style="display:none">
+    <hr>
+    <p><b style="color:green">AI prediction</b>: talent</p> 
+    <p><b style="color:palevioletred">AI rationale</b>: The answer is talent because commonsense suggests that talent is a word used in the context of entertaining. This indicates that the person has a natural ability for entertaining, which is why everyone told her she had a talent.
+        While fun, intelligence, and learn about are all related to entertaining, they are not typically associated with having a knack for entertaining. Recognize is not suitable as it does not relate to the context of the question.</p>
+    <button type="button" class="btn btn-primary btn-sm" id="ai_btn">Show Follow-up</button>
+    <hr>
+</div>
+
+<div class="mx-0 mx-sm-auto" id="q0_div" style="display:none">
+    <div>
+        <p>
+            <strong>This is an attention check. Please choose option "Undecided" to prove that you are paying attention. Do you agree with the AI prediction?</strong>
+        </p>
+        
+    </div>
+    {% with name = 'q0', options = ['Yes', 'No', 'Undecided'] %}
+    {% include 'components/multichoice.html' %}
+    {% endwith %}
+</div>
+
+<div class="mx-0 mx-sm-auto" id="q2_div" style="display:none">
+    <div>
+        <p>
+            <strong>Is the AI rationale helpful for you to assess whether the AI prediction is correct?</strong>
+        </p>
+    </div>
+
+    <div class="mb-3">
+        <div class="d-inline mx-3">
+            actively misleading
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_1" value="1" />
+            <label class="form-check-label" for="q2_1">1</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_2" value="2" />
+            <label class="form-check-label" for="q2_2">2</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_3" value="3" />
+            <label class="form-check-label" for="q2_3">3</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_4" value="4" />
+            <label class="form-check-label" for="q2_4">4</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_5" value="5" />
+            <label class="form-check-label" for="q2_5">5</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_6" value="6" />
+            <label class="form-check-label" for="q2_6">6</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_7" value="7" />
+            <label class="form-check-label" for="q2_7">7</label>
+        </div>
+        <div class="d-inline me-4">
+            helpful and explanatory
+        </div>
+    </div>
+    <!-- <div class="text-end">
+        <button type="button" class="btn btn-primary">Submit</button>
+    </div> -->
+</div>
+<button type="button" class="btn btn-primary btn-sm" id="q02_btn" style="display:none">Submit answer</button>
+<p id="q02_warning" class='warning-text' style="display:none">Please select an option before submitting your answer.</p>
+<p id="attn_warning" class='warning-text' style="display:none">You failed the attention check. Please select the option as directed.</p>
+{% endblock %}
+
+{% block next_button %}
+<div id="next_btn_div" style="display: none;">
+    <p>
+        A couple of <b><i>important</i></b> notes:
+        <li><span><b><i>There are attention checks in the HIT. Passing all the attention check will earn you a $1.50 bonus. You will lose all your bonus payments if you answer one of the attention checks incorrectly. </i></b></span></li>
+        <li><span><i><b> Each question has a ground truth correct answer. The AI prediction may or may not match the ground truth.</b></i></span></li>
+        <li><span>You can ignore minor spelling or grammatical errors. Some sentences might be lowercase incorrectly, please ignore this.</span></li>
+
+    </p>
+
+    <p>You are now good to go! When you are ready,
+        click the button below to start.</p>
+    <!-- <a class="btn btn-primary" href="{{ url_for('phase_instruction_page', phase_id=1) }}" role="button" id="next_btn">Next Page</a> -->
+    <button class="btn btn-primary" type="submit" id="next_btn" value="submit">Next Page</button>
+</div>
+{% endblock %}
+
+
+
+{% block script %}
+<script>
+    var element = document.getElementById("li_Instruction");
+    element.classList.add("list-group-item-success");
+    $("#task1_btn").click(function () {
+        var q1_a = $('input[name="q1"]:checked').val();
+        if(q1_a){
+            document.getElementById("response_div").style.pointerEvents = "none";
+            $("#ai_div").show(); $("#ai_div")[0].scrollIntoView();
+            $("#task1_btn").hide();
+            $("#task1_warning").hide();
+        }
+        else {
+            $("#task1_warning").show(); $("#task1_warning")[0].scrollIntoView();
+        }
+    });
+
+    $("#ai_btn").click(function () {
+        $("#q0_div").show(); $("#q0_div")[0].scrollIntoView();
+        $("#q2_div").show(); $("#q2_div")[0].scrollIntoView();
+        $("#q02_btn").show(); $("#q02_btn")[0].scrollIntoView();
+    });
+
+    $("#q02_btn").click(function () {
+        var q0_a = $('input[name="q0"]:checked').val();
+        var q2_a = $('input[name="q2"]:checked').val();
+        if (q0_a != "Undecided") {
+            $("#q02_warning").hide();
+            $("#attn_warning").show(); $("#attn_warning")[0].scrollIntoView();
+        } 
+        else if(q0_a && q2_a){
+            $("#next_btn_div").show(); $("#next_btn_div")[0].scrollIntoView();
+            $("#q02_btn").hide();
+            $("#q02_warning").hide();
+            $("#attn_warning").hide();
+        }
+        else {
+            $("#attn_warning").hide();
+            $("#q02_warning").show(); $("#q02_warning")[0].scrollIntoView();
+        }
+    });
+
+    // proceed only when all questions are answered
+    $("#next_btn").click(function () {
+        if (($("input[name='q1']:checked").val() == null) || ($("input[name='q2']:checked").val() == null) || ($("input[name='q0']:checked").val() == null)) {
+            alert("Please answer all question(s).");
+            return false;
+        }
+        else
+        {
+            document.querySelector('form').submit();
+        }
+    });
+
+</script>
+{% endblock %}

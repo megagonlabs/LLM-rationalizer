@@ -1,0 +1,149 @@
+{% extends "components/base.html" %}
+
+{% block header %}
+Initial Survey
+{% endblock %}
+
+{% block content %}
+<p>Before we start, please answer some quick survey questions to help us understand a bit more about you.</p>
+
+<input type="hidden" name="token" value="{{ token }}">
+
+
+<div class="mx-0 mx-sm-auto">
+    <div>
+        <p>
+            <strong>1. What is your gender?</strong>
+        </p>
+    </div>
+
+    {% with name = 'gender', options = ['Male', 'Female', 'Other'] %}
+    {% include 'components/multichoice.html' %}
+    {% endwith %}
+    <!-- <div class=" mb-3">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="gender1" value="Male" />
+            <label class="form-check-label" for="gender1">Male</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="gender2" value="Female" />
+            <label class="form-check-label" for="gender2">Female</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="gender3" value="Other" />
+            <label class="form-check-label" for="gender3">Other</label>
+        </div>
+    </div> -->
+</div>
+
+<div class="mx-0 mx-sm-auto">
+    <div>
+        <p>
+            <strong>2. What is your age?</strong>
+        </p>
+    </div>
+
+    {% with name = 'age', options = ['Under 18', '18 - 24', '25 - 34', '35 - 44', '45 - 54', '55 - 64', '65 or above'] %}
+    {% include 'components/multichoice.html' %}
+    {% endwith %}
+    <!-- <div class=" mb-3">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="age" id="age1" value="Under 18" />
+            <label class="form-check-label" for="age1">Under 18</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="age" id="age2" value="18 - 24" />
+            <label class="form-check-label" for="age2">18 - 24</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="age" id="age3" value="25 - 34" />
+            <label class="form-check-label" for="age3">25 - 34</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="age" id="age4" value="35 - 44" />
+            <label class="form-check-label" for="age4">35 - 44</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="age" id="age5" value="45 - 54" />
+            <label class="form-check-label" for="age5">45 - 54</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="age" id="age6" value="55 - 64" />
+            <label class="form-check-label" for="age6">55 - 64</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="age" id="age7" value="65 or above" />
+            <label class="form-check-label" for="age7">65 or above</label>
+        </div>
+    </div> -->
+</div>
+
+
+<div class="mx-0 mx-sm-auto">
+    <div>
+        <p>
+            <strong>3. What is your highest level of education?</strong>
+        </p>
+    </div>
+
+    {% with name = 'education', options = ['Some high school or lower', 'High school graduate', 'Some college', 'Bachelor degree', 'Graduate school or higher'] %}
+    {% include 'components/multichoice.html' %}
+    {% endwith %}
+    <!-- <div class=" mb-3">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="education" id="education1"
+                value="Some high school or lower" />
+            <label class="form-check-label" for="education1">Some high school or lower</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="education" id="education2"
+                value="High school graduate" />
+            <label class="form-check-label" for="education2">High school graduate</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="education" id="education3" value="Some college" />
+            <label class="form-check-label" for="education3">Some college</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="education" id="education4" value="Bachelor degree" />
+            <label class="form-check-label" for="education4">Bachelor degree</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="education" id="education5"
+                value="Graduate school or higher" />
+            <label class="form-check-label" for="education5">Graduate school or higher</label>
+        </div>
+    </div> -->
+</div>
+{% endblock %}
+
+{% block next_button %}
+<button class="btn btn-primary" type="submit" id="next_btn" value="submit">Next Page</button>
+<!-- <a class="btn btn-primary" href="{{ url_for('instruction_page') }}" role="button" id="next_btn">Next Page</a> -->
+{% endblock %}
+
+
+{% block script %}
+<script>
+    var element = document.getElementById("li_Initial_Survey");
+    element.classList.add("list-group-item-success");
+    // proceed only when all questions are answered
+    $("#next_btn").click(function () {
+        if (($("input[name='gender']:checked").val() == null) || ($("input[name='age']:checked").val() == null) || ($("input[name='education']:checked").val() == null)) {
+            alert("Please answer all question(s).");
+            return false;
+        }
+        else {
+            document.querySelector('form').submit();
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'components/base-example.html' %}
+
+{% block title %}{{i}}{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='page-example.css') }}">
+{% endblock %}
+
+{% block content %}
+    <h1>i: {{i}}</h1>
+    <hr>
+    <p>{{data}}</p>
+{% endblock %}

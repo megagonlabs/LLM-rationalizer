@@ -1,0 +1,30 @@
+<div class="mx-0 mx-sm-auto" id="response_example_div">
+    <p>
+        1. First you will be asked a multi-choice question consisting of the <b style="color:green">question</b> at hand and four to five <b style="color:orange">choices</b> as show below:
+        <li><b style="color:blue">Question: </b> She had a knack for entertaining, everybody told he she had a what?</li>
+        <li><b style="color:orange">Choices: </b> a) fun b) talent c) learn about d) intelligence e) recognize</li>  
+    </p>
+    <p>
+        2. You will be asked to select a suitable choice that answers the question as follows:    
+        {% with name = 'qex', options = ['a) fun', 'b) talent', 'c) learn about', 'd) intelligence', 'e) recognize'] %}
+        {% include 'components/multichoice.html' %}
+        {% endwith %}
+    </p>
+    <p>
+        3. After you answer the choice question, you will see a response provided by an AI model (<b style="color:green">AI prediction</b>)  
+        for the same question and an AI-generated rationalization (<b style="color:palevioletred">AI rationale</b>) for the selected response.
+        At this point you won't be able to change your answer anymore.
+    </p>
+    <p>    
+        4. You have to answer two follow-up questions on the AI prediction and the corresponding AI rationale.
+    </p>
+    <p>    
+        5. After you have completed all the multi-choice question answers, 
+        you will move on to the survey phase. In this phase, you will answer questions
+        about your experience in completing the tasks.
+    </p>
+</div>
+
+<script>
+    document.getElementById("response_example_div").style.pointerEvents = "none";
+</script>

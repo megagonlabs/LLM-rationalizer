@@ -1,0 +1,166 @@
+{% extends "components/base.html" %}
+
+{% block header %}
+Task {{id}}/20
+{% endblock %}
+
+
+{% block content %}
+<p>
+    <button class="btn btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+        aria-expanded="false" aria-controls="collapseExample">
+        Instructions (click to expand/collapse)
+    </button>
+</p>
+<div class="collapse" id="collapseExample" style="margin-bottom: 1em;">
+    <div class="card card-body">
+        {% include 'components/anno_instruction_entailment.html' %}
+    </div>
+</div>
+
+{% with treatment = treatment_id, premise = input.split("[mcq]")[0].split("Question: ")[1], hypothesis = input.split("[mcq]")[1].split("Choices: ")[1] %}
+{% include 'components/input_entailment.html' %}
+{% endwith %}
+
+<div class="mx-0 mx-sm-auto" id="response_div">
+    <div>
+        <p>
+        <strong> This is an attention check. Please choose option "c" to prove that you are paying attention. Your answer: </strong> 
+        </p>
+    </div>
+
+    {% with name = 'q1', options = options %}
+    {% include 'components/multichoice.html' %}
+    {% endwith %}
+    <!-- <div class=" mb-3">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q1" id="q1_1" value="entailment" />
+            <label class="form-check-label" for="q1_1">entailment</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q1" id="q1_2" value="neutral" />
+            <label class="form-check-label" for="q1_2">neutral</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q1" id="q1_3" value="contradiction" />
+            <label class="form-check-label" for="q1_3">contradiction</label>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" id="task3_btn">Next</button>
+    </div> -->
+    <button type="button" class="btn btn-primary btn-sm" id="task1_btn">Submit answer</button>
+    <p id="task1_warning" class='warning-text' style="display:none">Please select an option before submitting your answer.</p>
+</div>
+
+<div class="mx-0 mx-sm-auto" id="ai_div" style="display:none">
+    <hr>
+    <p><b>AI prediction</b>: {{gpt_label}}</p> 
+    <p><b>AI rationale</b>: {{gpt_explanation}}</p>
+    <button type="button" class="btn btn-primary btn-sm" id="ai_btn">Show Follow-up</button>
+    <hr>
+</div>
+
+<div class="mx-0 mx-sm-auto" id="q0_div" style="display:none">
+    <div>
+        <p>
+        <strong> This is an attention check. Please choose option "Undecided" to prove that you are paying attention. Do you agree with the AI prediction?</strong>
+        </p>
+    </div>
+    {% with name = 'q0', options = ['Yes', 'No', 'Undecided'] %}
+    {% include 'components/multichoice.html' %}
+    {% endwith %}
+</div>
+<div class="mx-0 mx-sm-auto" id="q2_div" style="display:none">
+    <div>
+        <p>
+        <strong> This is an attention check. Please choose "7" to prove that you are paying attention. Is the AI rationale helpful for you to assess whether the AI prediction is correct?</strong>
+        </p>
+    </div>
+
+    <div class="mb-3">
+        <div class="d-inline mx-3">
+            actively misleading
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_1" value="1" />
+            <label class="form-check-label" for="q2_1">1</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_2" value="2" />
+            <label class="form-check-label" for="q2_2">2</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_3" value="3" />
+            <label class="form-check-label" for="q2_3">3</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_4" value="4" />
+            <label class="form-check-label" for="q2_4">4</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_5" value="5" />
+            <label class="form-check-label" for="q2_5">5</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_6" value="6" />
+            <label class="form-check-label" for="q2_6">6</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="q2" id="q2_7" value="7" />
+            <label class="form-check-label" for="q2_7">7</label>
+        </div>
+        <div class="d-inline me-4">
+            helpful and explanatory
+        </div>
+    </div>
+    <!-- <div class="text-end">
+        <button type="button" class="btn btn-primary">Submit</button>
+    </div> -->
+</div>
+
+{% endblock %}
+
+{% block next_button %}
+<div id="next_btn_div" style="display: none;">
+    <button class="btn btn-primary" type="submit" id="next_btn" value="submit">Next Page</button>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    // display rationale after user submitted answer
+
+    $("#task1_btn").click(function () {
+        var q1_a = $('input[name="q1"]:checked').val();
+        if(q1_a){
+            document.getElementById("response_div").style.pointerEvents = "none";
+            $("#task1_btn").hide();
+            $("#task1_warning").hide();
+            $("#ai_div").show(); $("#ai_div")[0].scrollIntoView();
+        }
+        else {
+            $("#task1_warning").show(); $("#task1_warning")[0].scrollIntoView();
+        }
+    });
+    $("#ai_btn").click(function () {
+        $("#q0_div").show(); $("#q0_div")[0].scrollIntoView();
+        $("#q2_div").show(); $("#q2_div")[0].scrollIntoView();
+        $("#next_btn_div").show(); $("#next_btn_div")[0].scrollIntoView();
+    });
+    // proceed only when all questions are answered
+    $("#next_btn").click(function () {
+        if (($("input[name='q1']:checked").val() == null) || ($("input[name='q2']:checked").val() == null) || ($("input[name='q0']:checked").val() == null)) {
+            alert("Please answer all question(s).");
+            return false;
+        }
+    });
+</script>
+{% endblock %}

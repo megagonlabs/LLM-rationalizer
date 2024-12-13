@@ -1,0 +1,45 @@
+.body {
+    background-color: white;
+    overflow: auto;
+}
+
+.wrapper {
+    margin: 0 auto; 
+    width: 60em;
+}
+
+.nav {
+    margin: 10px 0;
+    background-color: aqua;
+}
+
+.nav > * {
+    margin: auto;
+}
+
+.nav .list-group-item {
+    min-width: 7em;
+}
+
+.header {
+    margin-top: 10px;
+    background-color: orange;
+}
+
+.content {
+    background-color: beige;
+}
+
+.next_button {
+    background-color: powderblue;
+}
+
+.warning-text {
+    color: red;
+    font-style: italic;
+    font-weight: bold;
+}
+.success-text {
+    color: green;
+    font-weight: bold;
+}

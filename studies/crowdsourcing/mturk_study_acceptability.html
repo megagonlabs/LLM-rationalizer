@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+    <script type='text/javascript' src='https://s3.amazonaws.com/mturk-public/externalHIT_v1.js'></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style id="hit_pubcss">
+
+    .demo_panels
+    {
+        max-width: 100%;
+        overflow-x: hidden;
+        background-color: #565656;
+        font-family: Arial;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+    }
+    .underline {
+        font-style: italic;
+        font-weight: bold;
+    }
+    .panel_body
+    {
+        font-family: Arial;
+        font-size: 16px;
+        padding-left: 20px;
+        margin-right: 20px;
+    }
+    .interface_button
+    {
+        font-family: Arial;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 8%;
+        border: 2px solid black;
+        background-color: #565656;
+    }
+    .parent {
+          border: 1px solid black;
+          margin: 1rem;
+          padding: 2rem 2rem;
+          text-align: center;
+        }
+    .child {
+      display: inline-block;
+      border: 1px solid red;
+      padding: 1rem 1rem;
+      vertical-align: middle;
+    }
+    #child_first
+    {
+        float: left;
+    }
+    #child_second
+    {
+        float: right;
+    }
+    .instruction
+    {
+        font-size: 16px;
+        font-weight: normal;
+        cursor: grab;
+        border: 2px solid white;
+        padding: 5px;
+        border-radius: 5px;
+
+    }
+    .question_label_span
+    {
+        color: #fc3da2;
+        font-size: 16px
+    }
+    .choice_label_span
+    {
+        color: #00d5b0;
+        font-size: 16px
+    }
+    .answer_label_span
+    {
+        color: #f8b923;
+        font-size: 16px
+    }
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        font-size: 13px;
+        font-family: Arial;
+        overflow: auto;
+    }
+
+    .spaced-item {
+        margin-top: 4px;
+        margin-bottom: 4px;
+        list-style: none;
+    }
+
+    .popup {
+        position: relative;
+        width: auto;
+        height: auto;
+        max-width: 1300px;
+        margin: 10% auto;
+        background-color: #fff;
+        padding: 20px;
+        overflow: auto;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    #instance_row_first
+    {
+        position: fixed;
+        z-index:150;
+        background-color:white;
+        border: 1px solid black;
+        width: 102%;
+    }
+
+    #instance_row_second
+    {
+        position: fixed;
+        z-index:150;
+        background-color:white;
+        border: 1px solid black;
+        width: 102%;
+    }
+
+    .interface_text
+    {
+        font-size: 16px;
+        font-family: Arial;
+        font-size: 18px;
+        font-weight: normal;
+    }
+    [data-testid=crowd-submit] {
+        display: none;
+        margin-left: 20px;
+    }
+    .slider_label
+    {
+        font-size: 13px;
+        font-family: Arial;
+        font-weight: normal;
+    }
+     .slider_center_label {
+        text-align: center;
+        margin-top: 30px;
+         position: absolute;
+         font-size: 13px;
+    }
+    .slider_val
+    {
+        color: forestgreen;
+        padding: 2px;
+        border: 1px solid #e5e5e5;
+        font-size: 13px;
+        transition: color 0.5s;
+    }
+    .color-transition {
+        color: red !important;
+        }
+
+
+
+    </style>
+<crowd-form answer-format="flatten-objects">
+    <div id="instruction_page" class="row" style="visibility: hidden;">
+        <div class="col-lg-12">
+            <div class="card">
+                <div id="instructions_page" class="demo_panels card-body">Instructions</div>
+            </div>
+            <div class="panel_body">
+                <p>
+                Thank you for participating in this HIT!
+                </p>
+                <p>
+                    In this HIT, you will read a multiple choice question about daily life. For each question, an answer has been selected and a rationalization has been provided for the given answer.
+                </p>
+                <h4>
+                    <b>HIT Specification</b>
+                </h4>
+
+
+                <p>
+                    Each HIT consists of four parts - a <span class="question_label_span">question</span>, four to five <span class="choice_label_span">choices</span>, a selected <span class="answer_label_span">answer</span> and two rationales.
+                    <li><span class="question_label_span"><b><i>Question: </i></b></span><span style="font-size: 14px">What does a person take in when they breathe?</span></li>
+                    <li><span class="choice_label_span"><b><i>Choices: </i></b></span><span style="font-size: 14px">a) Oxygen b) Air c) Water d) Lungs e) Diaphragm </span></li>
+                    <li><span class="answer_label_span"><b><i>Selected Answer: </i></b></span><span style="font-size: 14px">a) Oxygen</span></li>
+                    <li><span style="color: black;font-size: 16px"><b><i>Rationale: </i></b></span><span style="font-size: 14px">Rationale for answer a) Oxygen</span></li>
+                </p>
+                <p>
+                    Your task is to rate the rationalization on various aspects based on the questions asked and the selected answer. You will see an example of the HIT after you finish reading the instructions.
+                </p>
+                <p>
+                    A couple of <b><i>important</i></b> notes:
+                    <li><span style="font-size: 14px"><b><i>There are attention checks in the HIT. You may lose all your bonus payments if you answer the attention checks incorrectly. Passing each attention check will earn you a 5 cents bonus.</i></b></span></li>
+                    <li class="spaced-item"></li>
+                    <li><span style="color: #e8003c;font-size: 14px"><i><b>The default slider value is 0, but the rating scale is from 1 to 7. To give a rating of 1, move the slider to position 1. As you drag the slider by left mouse click, the corresponding rating will be displayed in a floating bubble and in a box above the slider. Make sure to adjust the slider to select a&nbsp; <u>non-zero rating</u>&nbsp; before submitting the HIT. Otherwise you won't be able to submit the HIT.</b></i></span></li>
+                    <li class="spaced-item"></li>
+                    <li><span style="font-size: 14px"><i><b>You may disagree with the answer, but you&nbsp; <u>should pretend it is correct</u>&nbsp; when evaluating the explanation</b></i></span></li>
+                    <li class="spaced-item"></li>
+                    <li><span style="font-size: 14px">You can ignore minor spelling or grammatical errors. Some sentences might be lowercase incorrectly, please ignore this.</span></li>
+
+                </p>
+                <crowd-checkbox name="instruction_checkbox">I have read and understood the instructions for completing the HIT.</crowd-checkbox>
+                <br>
+                <br>
+                <button id="instruction_next" type="button" class="interface_button btn btn-secondary">Next</button>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div id="example_page" class="row" style="visibility: hidden;">
+        <div class="col-lg-12">
+            <div class="card">
+                <div id="examples_page" class="demo_panels card-body">Example</div>
+            </div>
+
+            <div class="panel_body">
+                    <p>Before we proceed with the study phase, here is an example for you to get acquainted.</p>
+                    <p class="text-center"><i><b><span class="question_label_span">Question: </span> </b></i>Where can you learn about operations with numbers?</p>
+                    <p class="text-center"><i><b><span class="choice_label_span">Choices: </span> </b></i> a) math book  b) statistic c) office d) phonebook e) music school</p>
+                    <p class="text-center"><i><b><span class="answer_label_span">Selected Answer: </span> </b></i> a) math book</p>
+
+                <div style="display: flex;align-items: flex-start; justify-content: center; flex-wrap: wrap;">
+                    <div class="col-lg-12" style="padding-right: 1px;display: flex;align-items: center;justify-content: center">
+                        <div class="card" style="border: none">
+                            <div id="rationale_1" class="panel_body">
+                                <div>
+                                    Rationale
+                                </div>
+                                <p>The answer is a math book, which aligns with common knowledge. Math books teach operations with numbers, essential for mathematics. Statistics involve numbers, but not operations. Offices, phonebooks, and music schools aren't typical places to learn about operations with numbers.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                    <p class="text-center">On a scale of 1 (Low) - 7 (High), rate the given rationales in terms of their readability.</p>
+                    <div class="row" style="align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val' id="example_slider_val"></p>
+                    </div>
+                    <div style="display: flex;align-items: center;justify-content: center">
+                        <span>Low</span>
+                        <crowd-slider id="ex1r1" name="example1_r1" min="0" max="7" step="1" pin="true" width="500px"></crowd-slider>
+                        <span>High</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                <crowd-checkbox name="example_checkbox">I have read and tried the example for completing the HIT.</crowd-checkbox>
+                <br>
+                <br>
+                <button id="example_next" type="button" class="interface_button btn btn-secondary">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="instruction_row" class="row" style="visibility: hidden;padding: 0px;z-index: 150;position: fixed;width: 102%">
+        <div class="col-lg-12">
+            <div class="card">
+                <div id="demo_panel" class="demo_panels card-body">Study&emsp;&emsp;
+                      <label id="instruction_button" class="instruction" >Instructions</label>&emsp;&emsp;
+                      <label id="example_button" class="instruction" >Examples</label>&emsp;&emsp;
+                </div>
+            </div>
+            <div class="panel_body">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="instruction_popupOverlay">
+        <div class="popup">
+            <span class="close-btn" id="instruction_closeBtn">&times;</span>
+            <h2>Instruction</h2>
+            <p>
+                Thank you for participating in this HIT!
+                </p>
+                <p>
+                    In this HIT, you will read a multiple choice question about daily life. For each question, an answer has been selected and two rationalizations have been provided for the given answer.
+                </p>
+                <h4>
+                    <b>HIT Specification</b>
+                </h4>
+
+
+                 <p>
+                    Each HIT consists of four parts - a <span class="question_label_span">question</span>, four to five <span class="choice_label_span">choices</span>, a selected <span class="answer_label_span">answer</span> and two rationales.
+                    <li><span class="question_label_span"><b><i>Question: </i></b></span><span style="font-size: 14px">What does a person take in when they breathe?</span></li>
+                    <li><span class="choice_label_span"><b><i>Choices: </i></b></span><span style="font-size: 14px">a) Oxygen b) Air c) Water d) Lungs e) Diaphragm </span></li>
+                    <li><span class="answer_label_span"><b><i>Selected Answer: </i></b></span><span style="font-size: 14px">a) Oxygen</span></li>
+                    <li><span style="color: black;font-size: 16px"><b><i>Rationale: </i></b></span><span style="font-size: 14px">Rationale for answer a) Oxygen</span></li>
+                </p>
+                <p>
+                    Your task is to rate the rationalization on various aspects based on the questions asked and the selected answer. You will see an example of the HIT after you finish reading the instructions.
+                </p>
+                <p>
+                    A couple of <b><i>important</i></b> notes:
+                    <li><span style="font-size: 14px"><b><i>There are attention checks in the HIT. You may lose all your bonus payments if you answer the attention checks incorrectly. Passing each attention check will earn you a 5 cents bonus.</i></b></span></li>
+                    <li class="spaced-item"></li>
+                    <li><span style="color: #e8003c;font-size: 14px"><i><b>The default slider value is 0, but the rating scale is from 1 to 7. To give a rating of 1, move the slider to position 1. As you drag the slider by left mouse click, the corresponding rating will be displayed in a floating bubble and in a box above the slider. Make sure to adjust the slider to select a&nbsp; <u>non-zero rating</u>&nbsp; before submitting the HIT. Otherwise you won't be able to submit the HIT.</b></i></span></li>
+                    <li class="spaced-item"></li>
+                    <li><span style="font-size: 14px"><i><b>You may disagree with the answer, but you&nbsp; <u>should pretend it is correct</u>&nbsp; when evaluating the explanation</b></i></span></li>
+                    <li class="spaced-item"></li>
+                    <li><span style="font-size: 14px">You can ignore minor spelling or grammatical errors. Some sentences might be lowercase incorrectly, please ignore this.</span></li>
+
+                </p>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="example_popupOverlay">
+        <div class="popup">
+            <span class="close-btn" id="example_closeBtn">&times;</span>
+            <h2>Example</h2>
+            <p>Before we proceed with the study phase, here is an example for you to get acquainted.</p>
+                    <p class="text-center"><i><b><span class="question_label_span">Question: </span> </b></i>Where can you learn about operations with numbers?</p>
+                    <p class="text-center"><i><b><span class="choice_label_span">Choices: </span> </b></i> a) math book  b) statistic c) office d) phonebook e) music school</p>
+                    <p class="text-center"><i><b><span class="answer_label_span">Selected Answer: </span> </b></i> a) math book</p>
+
+                <div style="display: flex;align-items: flex-start; justify-content: center; flex-wrap: wrap;">
+                    <div class="col-lg-12" style="padding-right: 1px;display: flex;align-items: center;justify-content: center">
+                        <div class="card" style="border: none">
+                            <div id="rationale_1" class="panel_body">
+                                <div>
+                                    Rationale
+                                </div>
+                                <p>The answer is a math book, which aligns with common knowledge. Math books teach operations with numbers, essential for mathematics. Statistics involve numbers, but not operations. Offices, phonebooks, and music schools aren't typical places to learn about operations with numbers.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                    <p class="text-center">On a scale of 1 (Low) - 7 (High), rate the given rationales in terms of their readability.</p>
+                    <div class="row" style="align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val' >Selected Slider Value: X</p>
+                    </div>
+                    <div style="display: flex;align-items: center;justify-content: center">
+                        <span>Low</span>
+                        <crowd-slider id="ex1r1" name="example1_r1" min="0" max="7" step="1" pin="true" width="500px"></crowd-slider>
+                        <span>High</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="onload_popupOverlay">
+        <div class="popup">
+            <span class="close-btn" id="onload_closeBtn">&times;</span>
+            <!-- Add your content here -->
+            <h3>Read this before proceeding.</h3>
+            <p>Thank you for participating in this HIT!</p>
+            <p style="color: red">All questions in this HIT are mandatory. Based on the questions asked select an appropriate option or move the slider to the appropriate rating.</p>
+            <p>This first page consists of demographic information. The actual study is shown once you finish all the questions in the demographics.</p>
+            <p style="color: red"><b>The default slider value is 0, but the rating scale is 1 to 7. To give a rating of 1, move the slider to position 1. Make sure to adjust the slider correctly before submitting the HIT, else you won't be able to submit the HIT.</b></p>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="study_popupOverlay">
+        <div class="popup">
+            <span class="close-btn" id="study_closeBtn">&times;</span>
+            <!-- Add your content here -->
+            <h3>Read this before proceeding.</h3>
+            <p>Thank you for participating in this HIT!</p>
+            <p>You can access the Instructions and the previous Example by clicking on the buttons provided in the grey bar at the top.</p>
+        </div>
+    </div>
+
+
+    <div id="parent_one" style="position: relative;z-index:100">
+        <div id="instance_row_first" class="row"  style="visibility: hidden;margin-right: 0px">
+        <div class="col-lg-12" >
+            <div class="card" style="border: none;align-items: center;justify-content: center">
+                <div id="instance_body" class="panel_body" style="align-items: center;justify-content: center;" >
+                    <span><span class="question_label_span"><i><b>Question: </b></i></span> </span> <span id="question_span">${question}</span>
+                    <br>
+                    <br>
+                    <span><span class="choice_label_span"><i><b>Choices: </b></i></span></span><span id="choice_span">${choices}</span>
+                    <br>
+                    <br>
+                    <span><span class="answer_label_span"><i><b>Selected Answer: </b></i></span></span><span id="chosen_answer">${answer}</span>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+            <div class="col-lg-12" style="padding-right: 1px;display: flex;align-items: center;justify-content: center">
+                <h4>Rationale </h4>
+            </div>
+        <div class="col-lg-12" style="padding-right: 1px;display: flex;align-items: center;justify-content: center">
+            <div class="card" style="border: none">
+                <div id="rationale_1" class="panel_body">
+                    <span id="rationale_one">${our_rationale}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div id="question_row_first" class="row" style="visibility: hidden;position: absolute;width:100%;left: 25px">
+        <div class="col-lg-12">
+            <div class="card" style="border: white">
+                <div class="panel_body" id="question_body" style="padding-left: 0px">
+                    <div class="row" id="div_question_0" style="height:70px">
+                    </div>
+                    <div class="row" id="div_question_0_scale" style="height:50px">
+                    </div>
+                    <div class="row" id="div_question_0_scale_val" style="align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_0_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_0" style=";height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q0r1_low" class="slider_label"></span>
+                            <crowd-slider id="q0r1" name="question1_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q0r1_high" class="slider_label"></span>
+
+                        </div>
+                    </div>
+                    <div class="row" id="div_question_1" style="background-color: #f1f1f1;height:70px">
+                    </div>
+                    <div class="row" id="div_question_1_scale" style="background-color: #f1f1f1;height:50px">
+                    </div>
+                    <div class="row" id="div_question_1_scale_val" style="background-color: #f1f1f1;align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_1_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_1" style="background-color: #f1f1f1;height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q1r1_low" class="slider_label"></span>
+                            <crowd-slider id="q1r1" name="question2_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q1r1_high" class="slider_label"></span>
+
+                        </div>
+                    </div>
+                    <div class="row" id="div_question_2" style="height:70px">
+                    </div>
+                    <div class="row" id="div_question_2_scale" style="height:50px">
+                    </div>
+                    <div class="row" id="div_question_2_scale_val" style="align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val' id="slider_2_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_2" style="height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q2r1_low" class="slider_label"></span>
+                            <crowd-slider id="q2r1" name="question2_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q2r1_high" class="slider_label"></span>
+
+                        </div>
+                    </div>
+                    <div class="row" id="div_question_3" style="background-color: #f1f1f1;height:70px">
+                    </div>
+                    <div class="row" id="div_question_3_scale" style="background-color: #f1f1f1;height:50px">
+                    </div>
+                    <div class="row" id="div_question_3_scale_val" style="background-color: #f1f1f1;align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_3_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_3" style="background-color: #f1f1f1;height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q3r1_low" class="slider_label"></span>
+                            <crowd-slider id="q3r1" name="question3_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q3r1_high" class="slider_label"></span>
+
+                        </div>
+                    </div>
+                    <div class="row" id="div_question_4" style="height:70px">
+                    </div>
+                    <div class="row" id="div_question_4_scale" style="height:50px">
+                    </div>
+                    <div class="row" id="div_question_4_scale_val" style="align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_4_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_4" style="height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q4r1_low" class="slider_label"></span>
+                            <crowd-slider id="q4r1" name="question4_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q4r1_high" class="slider_label"></span>
+
+                        </div>
+                    </div>
+                    <div class="row" id="div_question_5" style="height:70px;background-color: #f1f1f1;" >
+                    </div>
+                    <div class="row" id="div_question_5_scale" style="background-color: #f1f1f1;height:50px">
+                    </div>
+                    <div class="row" id="div_question_5_scale_val" style="background-color: #f1f1f1;align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_5_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_5" style="height:100px;background-color: #f1f1f1;">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q5r1_low" class="slider_label"></span>
+                            <crowd-slider id="q5r1" name="question5_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q5r1_high" class="slider_label"></span>
+
+                        </div>
+                    </div>
+                    <div class="row" id="div_question_6" style="height:70px">
+                    </div>
+                    <div class="row" id="div_question_6_scale" style="height:50px">
+                    </div>
+                    <div class="row" id="div_question_6_scale_val" style="align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_6_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_6" style="height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q6r1_low" class="slider_label"></span>
+                            <crowd-slider id="q6r1" name="question6_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q6r1_high" class="slider_label"></span>
+
+                        </div>
+                    </div>
+                    <div class="row" id="div_question_7" style="background-color: #f1f1f1;height:70px">
+                    </div>
+                    <div class="row" id="div_question_7_scale" style="background-color: #f1f1f1;height:50px">
+                    </div>
+
+                    <div class="row" id="div_question_7_scale_val" style="background-color: #f1f1f1;align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_7_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_7" style="background-color: #f1f1f1;height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q7r1_low" class="slider_label"></span>
+                            <crowd-slider id="q7r1" name="question7_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q7r1_high" class="slider_label"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="row" id="div_question_8" style="height:70px">
+                    </div>
+                    <div class="row" id="div_question_8_scale" style="height:50px">
+                    </div>
+                    <div class="row" id="div_question_8_scale_val" style="align-content:center;justify-content:center;height:15px;">
+                        <p class = 'slider_val' id="slider_8_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_8" style="height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q8r1_low" class="slider_label"></span>
+                            <crowd-slider id="q8r1" name="question8_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q8r1_high" class="slider_label"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="row" id="div_question_9" style="background-color: #f1f1f1;height:70px;align-items: center;justify-content: center">
+                    </div>
+                    <div class="row" id="div_question_9_scale" style="background-color: #f1f1f1;height:50px;align-items: center;justify-content: center">
+                    </div>
+
+                    <div class="row" id="div_question_9_scale_val" style="background-color: #f1f1f1;align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_9_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_9" style="background-color: #f1f1f1;height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q9r1_low" class="slider_label">Not acceptable</span>
+                            <crowd-slider id="q9r1" name="question9_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q9r1_high" class="slider_label">Very acceptable</span>
+
+                        </div>
+                    </div>
+
+                    <div class="row" id="div_question_10" style="height:70px;align-items: center;justify-content: center">
+                    </div>
+                    <div class="row" id="div_question_10_scale" style="height:50px;align-items: center;justify-content: center">
+                    </div>
+
+                    <div class="row" id="div_question_10_scale_val" style="align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_10_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_10" style="height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q10r1_low" class="slider_label">Not acceptable</span>
+                            <crowd-slider id="q10r1" name="question10_rationale_1" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q10r1_high" class="slider_label">Very acceptable</span>
+
+                        </div>
+                    </div>
+
+                    <div class="row" id="div_question_11" style="background-color: #f1f1f1;height:70px;align-items: center;justify-content: center">
+                    </div>
+                    <div class="row" id="div_question_11_scale" style="background-color: #f1f1f1;height:50px;align-items: center;justify-content: center">
+                    </div>
+
+                    <div class="row" id="div_question_11_scale_val" style="background-color: #f1f1f1;align-content:center;justify-content:center;height:15px">
+                        <p class = 'slider_val'  id="slider_11_val"></p>
+                    </div>
+                    <div class="row" id="div_slider_11" style="background-color: #f1f1f1;height:100px">
+                        <div class="col-lg-12" style="display: flex;align-items: center;justify-content: center">
+                            <span id="q11r1_low" class="slider_label">Not acceptable</span>
+                            <crowd-slider id="q11r1" name="our_rating_overall" min="0" max="7" step="1" pin="true" width="500px" required></crowd-slider>
+                            <span id="q11r1_high" class="slider_label">Very acceptable</span>
+
+                        </div>
+                    </div>
+
+
+                    </div>
+
+                    <br>
+                    <button style="margin-left: 20px" id="study_next_first" type="button" class="interface_button btn btn-secondary">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <div id="last_page" class="row" style="visibility: hidden">
+        <div class="col-lg-12" style="padding-right: 1px">
+            <div class="card">
+                <div id="ending_page" class="demo_panels card-body">End</div>
+            </div>
+            <div class="panel_body">
+                <p>
+                Thank you have completed this HIT!
+                </p>
+                <p id="bonus_or_not">
+
+                </p>
+                <p>Thank you again for taking our HIT!</p>
+                <br>
+            </div>
+        </div>
+    </div>
+</crowd-form>
+</html>
+<script>
+    window.onload = function() {
+        instruction_page_display();
+
+    };
+
+    function showPopup() {
+        var popup = document.getElementById("onload_popupOverlay");
+        popup.style.display = "block";
+    }
+    function showStudyPopup()
+    {
+        var popup = document.getElementById("study_popupOverlay");
+        popup.style.display = "block";
+    }
+    function add_question_slides()
+    {
+        let questions = [
+            {'low':' Not understandable','high':'Completely understandable','key':'understandability','value':'Rate how&nbsp; <i><u>understandable</u></i>&nbsp; the rationale is: ','scale':'1 = Not understandable, 4 = Somewhat understandable, 7 = Completely understandable'},
+            {'low':'Completely inaccurate','high':'Completely accurate','key':'factuality','value':'Rate how&nbsp; <u><i>factually correct</i></u> &nbsp;the rationale is: ','scale':'1 = Completely inaccurate, 4 = Somewhat accurate, 7 = Completely accurate'},
+            {'low':' Not readable','high':'Completely readable','key':'readability','value':'Rate how &nbsp;<u><i>readable</i></u> &nbsp;the rationale is: ','scale':'1 = Not readable, 4 = Somewhat readable, 7 = Completely readable'},
+            {'low':' Not grammatically correct','high':'Completely grammatically correct','key':'grammar','value':'Rate how &nbsp;<u><i>grammatically correct</i></u> &nbsp;the rationale is: ','scale':'1 = Not grammatically correct, 4 = Somewhat grammatically correct, 7 = Grammatically correct'},
+            {'low':' Not fluent','high':'Completely fluent','key':'fluency_1','value':'(Attention Check: Answer this as 7)&nbsp;Rate how &nbsp;<u><i>fluent</i></u>&nbsp;the rationale is: ','scale':'1 = Not fluent, 4 = Somewhat fluent, 7 = Completely fluent'},
+            {'low':' Not fluent','high':'Completely fluent','key':'fluency_2','value':'(Attention Check: Answer this as 1)&nbsp;Rate how &nbsp;<u><i>fluent</i></u>&nbsp;the rationale is: ','scale':'1 = Not fluent, 4 = Somewhat fluent, 7 = Completely fluent'},
+            {'low':' No new information','high':'Enough new information','key':'information_gain','value':'Rate how much&nbsp; <i><u>new information</u></i>&nbsp; is captured by the rationale to justify the selected answer. New information can be new facts or reasoning not stated in the question and answer choices:','scale':'1 = No new information, 4 = Few new information, 7 = Enough new information'},
+            {'low':' Not supportive','high':'Very supportive','key':'support','value':'Rate how &nbsp;<u><i>supportive</i></u>&nbsp; the rationale is of the selected answer: ','scale':'1 = Not supportive, 4 = Somewhat supportive, 7 = Completely supportive'},
+            {'low':' Low sufficiency','high':'High sufficiency','key':'sufficiency','value':'Rate how&nbsp; <u><i>sufficient</i></u>&nbsp; the rationale is in justifying the selected answer: ','scale':'1 = Not sufficient, 4 = Somewhat sufficient, 7 = Completely sufficient'},
+            {'low':' Very redundant','high':'Very concise','key':'redundancy','value':'Rate the amount of&nbsp; <u><i>redundancy</i></u>&nbsp; present in the rationale: ','scale':'1 = Very redundant, 4 = Somewhat redundant, 7 = Very concise'},
+            {'low':' Not convincing','high':'Very convincing','key':'convincing','value':'Rate how <i><u>convincingly</u></i> does the rationalization refute the unselected choices.','scale':'1 = Not convincing, 4 = Somewhat convincing, 7 = Very convinving'}
+        ]
+
+        function shuffleArray(array) {
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+        }
+
+        function randomlyPickEachItemOnce(array) {
+          const shuffledArray = [...array];
+          shuffleArray(shuffledArray);
+
+          return shuffledArray;
+        }
+
+        var randomQuestion = randomlyPickEachItemOnce(questions);
+        var parentElement = $('#question_row_first')
+        $('#instance_row_first').css('top',$('#instruction_row').height())
+        $('#question_row_first').css('top',$('#instruction_row').height() + $('#instance_row_first').height())
+        var parentElement_js = document.getElementById('question_row_first')
+
+        var rationale_one_text = parentElement.find('#rationale_one').text()
+
+
+
+        for(var i=0;i<randomQuestion.length;i++)
+        {
+
+            var divElement = parentElement_js.querySelector('#div_question_'+i)
+            var divElementScale = parentElement_js.querySelector('#div_question_'+i+'_scale')
+            divElement.innerHTML = '<p>'+randomQuestion[i]['value']+'</p>'
+            divElementScale.innerHTML = '<p style="font-size: 13px">'+randomQuestion[i]['scale']+'</p>'
+
+            divElement.style.display = 'flex';
+            divElement.style.justifyContent = 'center';
+            divElement.style.alignItems = 'center';
+            divElementScale.style.display = 'flex';
+            divElementScale.style.justifyContent = 'center';
+            divElementScale.style.alignItems = 'center';
+
+            if (randomQuestion[i]['key'] === 'fluency_1' || randomQuestion[i]['key'] === 'fluency_2')
+            {
+                parentElement.find('#'+'q'+i.toString()+'r1').attr('name','rationale1_'+randomQuestion[i]['key']);
+            }
+            else
+            {
+                parentElement.find('#'+'q'+i.toString()+'r1').attr('name','our_rationale1_'+randomQuestion[i]['key']);
+
+            }
+
+
+            parentElement.find('#q'+i.toString()+'r1_low').text(randomQuestion[i]['low']);
+            parentElement.find('#q'+i.toString()+'r1_high').text(randomQuestion[i]['high'])
+
+
+
+        }
+        parentElement_js.querySelector('#div_question_11').innerHTML = 'Rate the overall acceptability of the given rationale?'
+        parentElement_js.querySelector('#div_question_11_scale').innerHTML = '<p style="font-size: 13px">'+'1 = Not acceptable 4 = Somewhat acceptable 7 = Very acceptable'+'</p>'
+
+    }
+
+    function generate_example_page_alert()
+    {
+        alert('Give your ratings for the example shown.')
+    }
+
+    function study_alert()
+    {
+        alert('Not all questions are answered! Check again. ')
+    }
+    function example_page_display()
+    {
+        $('#instruction_page').css('display', 'none');
+        $('#example_page').css('visibility', 'visible');
+    }
+
+    function instruction_page_display()
+    {
+        $('#demo_row').css('display', 'none');
+        $('#instruction_page').css('visibility', 'visible');
+    }
+
+    function randomizer()
+    {
+
+        $('#instruction_row').css('visibility', 'visible');
+        $('#instance_row_first').css('visibility', 'visible');
+        $('#question_row_first').css('visibility', 'visible');
+        $('#instance_row_second').css('display', 'none');
+        $('#question_row_second').css('display', 'none');
+
+    }
+
+    function countBooleans(boolArray) {
+      let trueCount = 0;
+      let falseCount = 0;
+
+      for (const value of boolArray) {
+        if (value === true) {
+          trueCount++;
+        } else {
+          falseCount++;
+        }
+      }
+
+      const result = {
+        true: trueCount,
+        false: falseCount
+      };
+
+      return result;
+    }
+
+    function last_page_display(parentElement)
+    {
+        $('#instance_row_first').css('display', 'none');
+        $('#instance_row_second').css('display', 'none');
+        $('#question_row_first').css('display', 'none');
+        $('#question_row_second').css('display', 'none');
+        $('#instruction_row').css('display', 'none');
+        $('#last_page').css('visibility', 'visible');
+        $('[data-testid="crowd-submit"]').show();
+        $('[data-testid=crowd-submit]').prop("disabled",false);
+
+
+
+        var attention1_rationale1 = parentElement.find('[name=rationale1_fluency_1]').attr('value') === '7'
+        var attention2_rationale1 = parentElement.find('[name=rationale1_fluency_2]').attr('value') === '1'
+
+        var attention_bool = [attention1_rationale1,attention2_rationale1];
+        var count_attn = countBooleans(attention_bool)
+
+        if (count_attn['true'] === 2)
+        {
+            $('#bonus_or_not').text('You have earned a complete bonus of $0.1. Your bonus payment will be paid to you in the next 48 hours.')
+        }
+        else if(count_attn['true'] < 2 && count_attn['true'] > 0)
+        {
+            $('#bonus_or_not').text('You have earned a partial bonus of $'+(0.05*count_attn['true']).toFixed(2)+'. Your bonus payment will be paid to you in the next 48 hours.')
+        }
+        else if (count_attn['true'] === 0)
+        {
+            $('#bonus_or_not').text('Sorry but you failed to provide correct answers in the attention check due to which you will not recive any bonus.')
+
+        }
+
+    }
+
+    function next_page_display()
+    {
+        var alert_question1,alert_question2,alert_question3,alert_question4, alert_question5,alert_question6
+        $('#example_page').css('display', 'none');
+
+        showStudyPopup();
+        randomizer();
+        add_question_slides();
+
+    }
+
+    function final_submit()
+    {
+
+
+        var parentElement = $('#question_row_first')
+
+        if(parentElement.find('#q0r1')[0].attributes.value.nodeValue!=='0' && parentElement.find('#q1r1')[0].attributes.value.nodeValue!=='0' &&  parentElement.find('#q2r1')[0].attributes.value.nodeValue!=='0'  && parentElement.find('#q3r1')[0].attributes.value.nodeValue!=='0' &&  parentElement.find('#q4r1')[0].attributes.value.nodeValue!=='0'  && parentElement.find('#q5r1')[0].attributes.value.nodeValue!=='0'  && parentElement.find('#q6r1')[0].attributes.value.nodeValue!=='0'  && parentElement.find('#q7r1')[0].attributes.value.nodeValue!=='0'  && parentElement.find('#q8r1')[0].attributes.value.nodeValue!=='0' && parentElement.find('#q9r1')[0].attributes.value.nodeValue!=='0' && parentElement.find('#q10r1')[0].attributes.value.nodeValue!=='0' && parentElement.find('#q11r1')[0].attributes.value.nodeValue!=='0' )
+        {
+            $('#study_next_first').prop("disabled",false);
+
+        }
+        else
+        {
+            $('#study_next_first').prop("disabled",true);
+
+        }
+        setTimeout(final_submit, 1000);
+    }
+
+
+
+    $('#demo_submit_button').click(function(){
+
+        var alert_familiarity = 0
+        var gender_alert = 0
+        var age_alert = 0
+        var edu_alert = 0
+
+        if($('[name="AI_familiarity"]')[0].attributes.value.nodeValue==='0' || $('[name="LLM_familiarity"]')[0].attributes.value.nodeValue==='0')
+        {
+            alert_familiarity = generate_familiarity_alert()
+        }
+        if ($('[name="male"]').attr('aria-checked') === 'false' && $('[name="female"]').attr('aria-checked') ==='false' && $('[name="others"]').attr('aria-checked')==='false')
+        {
+            gender_alert = generate_gender_alert()
+        }
+        if ($('[name="under_18"]').attr('aria-checked') === 'false' && $('[name="18_24"]').attr('aria-checked') ==='false' && $('[name="25_34"]').attr('aria-checked')==='false' && $('[name="35_44"]').attr('aria-checked')==='false' && $('[name="45_54"]').attr('aria-checked')==='false' && $('[name="55_64"]').attr('aria-checked')==='false' && $('[name="65_above"]').attr('aria-checked')==='false' && $('[name="no_say"]').attr('aria-checked')==='false')
+        {
+            age_alert = generate_age_alert()
+        }
+        if ($('[name="HS"]').attr('aria-checked') === 'false' && $('[name="BS"]').attr('aria-checked') ==='false' && $('[name="MS"]').attr('aria-checked')==='false')
+        {
+            edu_alert = generate_education_alert()
+        }
+        if (alert_familiarity === 0 && gender_alert ===0 && age_alert === 0 && edu_alert===0)
+        {
+            instruction_page_display()
+        }
+
+    });
+
+    $('#instruction_next').click(function(){
+
+        if ($('[name=instruction_checkbox]').attr('aria-checked') === 'true')
+        {
+            example_page_display()
+        }
+    })
+
+
+
+    $('#example_next').click(function() {
+
+        if ($('[name=example_checkbox]').attr('aria-checked') === 'true' && $('#ex1r1')[0].attributes.value.nodeValue!=='0') {
+            next_page_display()
+        }
+        if ($('#ex1r1')[0].attributes.value.nodeValue==='0')
+        {
+            generate_example_page_alert()
+        }
+
+    })
+
+    $('#study_next_first').click(function(){
+        var parentElement = $('#question_row_first')
+
+        if(parentElement.find('#q0r1')[0].attributes.value.nodeValue!=='0'  && parentElement.find('#q1r1')[0].attributes.value.nodeValue!=='0' &&  parentElement.find('#q2r1')[0].attributes.value.nodeValue!=='0' &&  parentElement.find('#q3r1')[0].attributes.value.nodeValue!=='0'  && parentElement.find('#q4r1')[0].attributes.value.nodeValue!=='0'  && parentElement.find('#q5r1')[0].attributes.value.nodeValue!=='0' &&  parentElement.find('#q6r1')[0].attributes.value.nodeValue!=='0'  && parentElement.find('#q7r1')[0].attributes.value.nodeValue!=='0' && parentElement.find('#q8r1')[0].attributes.value.nodeValue!=='0' && parentElement.find('#q9r1')[0].attributes.value.nodeValue!=='0'&& parentElement.find('#q10r1')[0].attributes.value.nodeValue!=='0' && parentElement.find('#q11r1')[0].attributes.value.nodeValue!=='0')
+        {
+            last_page_display(parentElement)
+        }
+        else
+        {
+            study_alert()
+        }
+
+    })
+
+    $('#ex1r1').on('change',function(){
+        $(`#example_slider_val`).text('Selected Slider Value: '+$(`#ex1r1`).val());
+        $(`#example_slider_val`).toggleClass('color-transition');
+        setTimeout(function() {
+                $(`#example_slider_val`).toggleClass('color-transition');
+            }, 1500);
+    })
+
+
+
+    $(document).ready(function() {
+        for (let i = 0; i <= 11; i++) {
+            $('#q'+i+'r1').on('change', function() {
+
+                $('#slider_'+i+'_val').text('Selected Slider Value: '+$('#q'+i+'r1').val());
+                $('#slider_'+i+'_val').toggleClass('color-transition');
+                setTimeout(function() {
+                    $('#slider_'+i+'_val').toggleClass('color-transition');
+                }, 1500);
+            });
+        }
+    });
+
+    $(document).ready(function() {
+        $('#example_slider_val').text('Selected Slider Value: 0');
+        for (let i = 0; i <= 11; i++) {
+            $('#slider_'+i+'_val').text('Selected Slider Value: 0');
+
+
+
+
+        }
+    });
+
+
+    $('#instruction_button').click(function(){
+        const popupOverlay = document.getElementById("instruction_popupOverlay");
+        popupOverlay.style.display = "block";
+    });
+    $('#example_button').click(function(){
+        const popupOverlay = document.getElementById("example_popupOverlay");
+        popupOverlay.style.display = "block";
+    });
+    $('#instruction_closeBtn').click(function(){
+        const popupOverlay = document.getElementById("instruction_popupOverlay");
+        popupOverlay.style.display = "none";
+    });
+    $('#example_closeBtn').click(function(){
+        const popupOverlay = document.getElementById("example_popupOverlay");
+        popupOverlay.style.display = "none";
+    });
+
+    $('#onload_closeBtn').click(function(){
+        const popupOverlay = document.getElementById("onload_popupOverlay");
+        popupOverlay.style.display = "none";
+    });
+
+    $('#study_closeBtn').click(function(){
+        const popupOverlay = document.getElementById("study_popupOverlay");
+        popupOverlay.style.display = "none";
+    });
+
+
+
+
+</script>

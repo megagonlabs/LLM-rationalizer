@@ -1,0 +1,27 @@
+{% extends "components/base.html" %}
+
+{% block header %}
+End
+{% endblock %}
+
+{% block content %}
+<p>Thank you! You've just completed this HIT.</p>
+
+{% if pass_attention_check==False %}
+<p>You didn’t earn any bonus because you didn't pass the attention checks.</p>
+{% else %}
+<p>You’ve earned a bonus of {{bonus}}. Your bonus payment will be paid to you in the next 48 hours. 
+{% endif %}
+<p>Thanks again for taking our HIT!</p>
+{% endblock %}
+
+{% block next_button %}
+<button class="btn btn-primary" type="submit" id="submit_btn" value="submit">Submit HIT</button>
+{% endblock %}
+
+{% block script %}
+<script>
+    var element = document.getElementById("li_End");
+    element.classList.add("list-group-item-success");
+</script>
+{% endblock %}
